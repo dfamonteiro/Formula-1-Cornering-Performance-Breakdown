@@ -13,6 +13,7 @@ from typing import Set, Dict
 ff1.Cache.enable_cache('cache')
 
 def corner_type_performance(lap : ff1.core.Lap) -> Dict[str, Dict[str, float]]:
+    "Outputs the time, distance and speed spent on each type of corner for any given labelled lap."
     segments = [
         ("STRAIGHT", 0, 0)
     ]
@@ -58,6 +59,7 @@ def corner_type_performance(lap : ff1.core.Lap) -> Dict[str, Dict[str, float]]:
     return res
 
 def get_team_fastest_laps(session : ff1.core.Session) -> ff1.core.Laps:
+    "Get the fastest lap (illegal or not) of every team in the session."
     teams = pd.unique(session.laps['Team'])
     list_fastest_laps = list()
     for team in teams:
@@ -73,6 +75,7 @@ def get_team_fastest_laps(session : ff1.core.Session) -> ff1.core.Laps:
     return fastest_laps
 
 def label_lap(session : ff1.core.Session, lap : ff1.core.Lap):
+    "Assign a corner type for every datapoint in the lap."
     corner_type = []
     for index, row in lap.telemetry.iterrows():
         for t, start, finish in CORNER_LABELS[str(session)]:
@@ -85,6 +88,7 @@ def label_lap(session : ff1.core.Session, lap : ff1.core.Lap):
     lap.telemetry["CornerType"] = corner_type
 
 def gen_cornering_performance_data(year : int, path : str, force_include : Set[str] = {}):
+    "Generates cornering performance data for car and track in the season."
     data = []
     for i in range(1, 30):
         try:
