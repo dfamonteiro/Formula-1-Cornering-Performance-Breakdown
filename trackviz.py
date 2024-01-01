@@ -1,10 +1,12 @@
 import fastf1 as ff1
 from matplotlib import pyplot as plt
+import matplotlib as mpl
 from timple.timedelta import strftimedelta
 from fastf1 import plotting
 import numpy as np
 from data import CORNER_COLORS, CORNER_TYPES
 from gen_data import get_team_fastest_laps, corner_type_performance, label_lap
+from sys import argv
 
 # Straight-line: Full throttle
 # High:       >200kph
@@ -15,7 +17,8 @@ from gen_data import get_team_fastest_laps, corner_type_performance, label_lap
 
 ff1.Cache.enable_cache('cache')
 
-def plot_team_quali_performance(session : ff1.core.Session, ax):
+def plot_team_quali_performance(session : ff1.core.Session, ax : mpl.axes.Axes):
+    "Plots the best lap of each team as an horizontal bar plot"
     fastest_laps = get_team_fastest_laps(session)
     pole_lap = fastest_laps.pick_fastest()
 
@@ -40,7 +43,8 @@ def plot_team_quali_performance(session : ff1.core.Session, ax):
     ax.set_title(f"{session.event['EventName']} {session.event.year} Qualifying\n"
                  f"Fastest Lap: {lap_time_string} ({pole_lap['Driver']})")
 
-def plot_track_map(lap, ax):
+def plot_track_map(lap : ff1.core.Lap, ax : mpl.axes.Axes):
+    "Plots a track map, coloured by corner type"
     ax.set_aspect('equal', adjustable='box')
     ax.axis('off')
 
@@ -55,7 +59,8 @@ def plot_track_map(lap, ax):
 
         ax.plot([row0["X"], row1["X"]], [row0["Y"], row1["Y"]], color=color, linestyle='-', linewidth = 2)
 
-def plot_speedtrace(lap, ax, time = False):
+def plot_speedtrace(lap : ff1.core.Lap, ax : mpl.axes.Axes, time : bool = False):
+    "Plots the speed trace of the given lap"
     ax.set(xlabel = "Time (s)" if time else "Distance (m)", ylabel = "Speed (km/h)")
 
     ax.axhline(y = 100, color = 'grey', linestyle = '-') 
@@ -86,7 +91,8 @@ def plot_speedtrace(lap, ax, time = False):
             linewidth = 1
         )
 
-def plot_time_per_type(lap, ax):
+def plot_time_per_type(lap : ff1.core.Lap, ax : mpl.axes.Axes):
+    "Plots the time spent on each corner type, as an horizontal bar plot"
     corner_performance = corner_type_performance(lap)
     times = [
         corner_performance["LOW"]        ["Time"],
@@ -101,7 +107,8 @@ def plot_time_per_type(lap, ax):
     ax.set_yticklabels(CORNER_TYPES)
     ax.set(xlabel = "Time (s)")
 
-def plot_performance_per_car(session, ax):
+def plot_performance_per_car(session : ff1.core.Session, ax : mpl.axes.Axes):
+    "Plots a breakdown of the performance of every team by corner types, as a parallel coordinates plot"
     fastest_laps = get_team_fastest_laps(session)
     team_corner_performance = {}
     for i, lap in fastest_laps.iterlaps():
@@ -137,7 +144,8 @@ def plot_performance_per_car(session, ax):
     for i in range(5):
         ax.axvline(x = i, color = 'grey', linestyle = '-')
 
-def show_track_characteristics(session : ff1.core.Session):
+def show_track_stats(session : ff1.core.Session):
+    "Shows the qualifying stats for a given session as a 2x3 grid of plots"
     fig, axes = plt.subplots(2, 3, figsize=(12, 12))
 
     plot_team_quali_performance(session, axes[0][0])
@@ -152,10 +160,11 @@ def show_track_characteristics(session : ff1.core.Session):
 
     plt.show()
 
-def show_season_performance():
+def show_season_performance(year : int):
+    "Shows the qualifying stats for every qualifying session of a given F1 season"
     for i in range(1, 30):
         try:
-            quali_session = ff1.get_session(2023, i, 'Q')
+            quali_session = ff1.get_session(year, i, 'Q')
             print(f"Loading {quali_session}")
             quali_session.load()
         except ValueError:
@@ -169,14 +178,20 @@ def show_season_performance():
             print("Wet weather tyres were used. Skipping this event")
             continue
 
-        show_track_characteristics(quali_session)
+        show_track_stats(quali_session)
 
 if __name__ == "__main__":
-    # show_season_performance()
+    if len(argv) == 3 and argv[1] == "all":
+        show_season_performance(int(argv[2]))
+    elif len(argv) == 3:
+        year = int(argv[1])
+        round_number = int(argv[2])
 
-    #########################################
-    quali_session = ff1.get_session(2023, 21, 'Q')
-    print(f"Loading {quali_session}")
-    quali_session.load()
-    show_track_characteristics(quali_session)
-    #########################################
+        quali_session = ff1.get_session(year, round_number, 'Q')
+        print(f"Loading {quali_session}")
+        quali_session.load()
+        show_track_stats(quali_session)
+    else:
+        print("Usage:")
+        print(f"  {argv[0]} 'all' year")
+        print(f"  {argv[0]} year round_number")
