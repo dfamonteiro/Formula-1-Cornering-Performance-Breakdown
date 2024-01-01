@@ -2,6 +2,7 @@ import fastf1 as ff1
 import pandas as pd
 import numpy as np
 from data import CORNER_LABELS
+from typing import Set, Dict
 
 # Straight-line: Full throttle
 # High:       >200kph
@@ -9,10 +10,9 @@ from data import CORNER_LABELS
 # Medium-Low:  100-150kph
 # Low:        <100kph
 
-
 ff1.Cache.enable_cache('cache')
 
-def corner_type_performance(lap):
+def corner_type_performance(lap : ff1.core.Lap) -> Dict[str, Dict[str, float]]:
     segments = [
         ("STRAIGHT", 0, 0)
     ]
@@ -72,7 +72,7 @@ def get_team_fastest_laps(session : ff1.core.Session) -> ff1.core.Laps:
 
     return fastest_laps
 
-def label_lap(session, lap):
+def label_lap(session : ff1.core.Session, lap : ff1.core.Lap):
     corner_type = []
     for index, row in lap.telemetry.iterrows():
         for t, start, finish in CORNER_LABELS[str(session)]:
@@ -84,11 +84,11 @@ def label_lap(session, lap):
     
     lap.telemetry["CornerType"] = corner_type
 
-def gen_cornering_performance_data():
+def gen_cornering_performance_data(year : int, path : str, force_include : Set[str] = {}):
     data = []
     for i in range(1, 30):
         try:
-            quali_session = ff1.get_session(2023, i, 'Q')
+            quali_session = ff1.get_session(year, i, 'Q')
             print(f"Loading {quali_session}")
             quali_session.load()
         except ValueError:
@@ -98,7 +98,7 @@ def gen_cornering_performance_data():
 
         tyres_used = set(quali_session.laps["Compound"])
 
-        if ('INTERMEDIATE' in tyres_used or 'WET' in tyres_used) and str(quali_session) not in {'2023 Season Round 10: British Grand Prix - Qualifying',}:
+        if ('INTERMEDIATE' in tyres_used or 'WET' in tyres_used) and str(quali_session) not in force_include:
             print("Wet weather tyres were used. Skipping this event")
             continue
 
@@ -122,7 +122,7 @@ def gen_cornering_performance_data():
                 data.append(entry)
         
     data = pd.DataFrame(data)
-    data.to_json("cornering_data.json")
+    data.to_json(path)
 
 if __name__ == "__main__":
-    gen_cornering_performance_data()
+    gen_cornering_performance_data(2023, "cornering_data.json", {'2023 Season Round 10: British Grand Prix - Qualifying',})
