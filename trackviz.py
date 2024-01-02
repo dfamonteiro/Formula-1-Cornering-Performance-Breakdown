@@ -181,8 +181,8 @@ def show_season_performance(year : int):
         show_track_stats(quali_session)
 
 if __name__ == "__main__":
-    if len(argv) == 3 and argv[1] == "all":
-        show_season_performance(int(argv[2]))
+    if len(argv) == 3 and argv[2] == "all":
+        show_season_performance(int(argv[1]))
     elif len(argv) == 3:
         year = int(argv[1])
         round_number = int(argv[2])
@@ -193,5 +193,5 @@ if __name__ == "__main__":
         show_track_stats(quali_session)
     else:
         print("Usage:")
-        print(f"  {argv[0]} 'all' year")
+        print(f"  {argv[0]} year 'all'")
         print(f"  {argv[0]} year round_number")
