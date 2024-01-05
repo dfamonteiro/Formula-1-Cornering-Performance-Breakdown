@@ -24,7 +24,10 @@ def plot_team_quali_performance(session : ff1.core.Session, ax : mpl.axes.Axes):
 
     team_colors = list()
     for index, lap in fastest_laps.iterlaps():
-        color = ff1.plotting.team_color(lap['Team'])
+        try:
+            color = ff1.plotting.team_color(lap['Team'])
+        except KeyError:
+            color = "black"
         team_colors.append(color)
 
     ax.barh(fastest_laps.index, fastest_laps['LapTimeDelta'], color=team_colors, edgecolor='grey')
@@ -115,7 +118,11 @@ def plot_performance_per_car(session : ff1.core.Session, ax : mpl.axes.Axes):
         driver = lap["Driver"]
         print(f"Processing {driver}...")
         team = lap["Team"]
-        label_lap(session, lap)
+        try:
+            label_lap(session, lap)
+        except ValueError:
+            # No clue why this happens. Maybe a ff1 bug? Bad data? Both? Who knows
+            continue
         corner_performance = corner_type_performance(lap)
         
         team_corner_performance[team] = {}
@@ -131,7 +138,10 @@ def plot_performance_per_car(session : ff1.core.Session, ax : mpl.axes.Axes):
         if team == 'Haas F1 Team':
             team_color = "black"
         else:
-            team_color = ff1.plotting.team_color(team)
+            try:
+                team_color = ff1.plotting.team_color(team)
+            except KeyError:
+                team_color = "black"
         speeds = []
 
         for ct in CORNER_TYPES:
