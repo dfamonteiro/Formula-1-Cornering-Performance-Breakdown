@@ -186,7 +186,56 @@ CORNER_LABELS = {
         ("LOW", 1890, 2330),
         ("LOW", 3020, 3340),
         ("LOW", 4920, 5300),
-    ]
+    ],
+    '2019 Season Round 3: Chinese Grand Prix - Qualifying' : [
+        ("LOW", 390, 1040),
+        ("LOW", 1430, 1680),
+        ("HIGH", 1910, 2210),
+        ("MEDIUM-HIGH", 2210, 2440),
+        ("MEDIUM-LOW", 2440, 2620),
+        ("LOW", 2980, 3154),
+        ("MEDIUM-LOW", 3154, 3334),
+        ("HIGH", 3334, 3600),
+        ("LOW", 4460, 4864),
+        ("MEDIUM-HIGH", 5058, 5200)
+    ],
+    '2022 Season Round 15: Dutch Grand Prix - Qualifying' : [
+        ("MEDIUM-LOW", 150, 470),
+        ("MEDIUM-HIGH", 610, 745),
+        ("MEDIUM-LOW", 745, 936),
+        ("HIGH", 1530, 2100),
+        ("MEDIUM-LOW", 2100, 2612),
+        ("LOW", 2938, 3235),
+        ("MEDIUM-HIGH", 3378, 3580)
+    ],
+    '2019 Season Round 7: Canadian Grand Prix - Qualifying' : [
+        ("LOW", 116, 426),
+        ("MEDIUM-LOW", 595, 834),
+        ("MEDIUM-LOW", 1074, 1349),
+        ("MEDIUM-LOW", 1818, 2093),
+        ("LOW", 2492, 2767),
+        ("MEDIUM-LOW", 3680, 3973),
+    ],
+    '2021 Season Round 2: Emilia Romagna Grand Prix - Qualifying' : [
+        ("MEDIUM-HIGH", 750, 1020),
+        ("MEDIUM-HIGH", 1480, 1780),
+        ("MEDIUM-LOW", 1780, 2070),
+        ("HIGH", 2460, 2660),
+        ("MEDIUM-LOW", 2900, 3200),
+        ("MEDIUM-LOW", 3460, 3740),
+        ("MEDIUM-LOW", 4230, 4454),
+        ("MEDIUM-HIGH", 4454, 4580),
+     ],
+     '2022 Season Round 14: Belgian Grand Prix - Qualifying' : [
+        ("LOW", 240, 520),
+        ("HIGH", 1050, 1400),
+        ("MEDIUM-HIGH", 2240, 2740),
+        ("MEDIUM-LOW", 2840, 3219),
+        ("HIGH", 3219, 3380),
+        ("HIGH", 3700, 4000),
+        ("MEDIUM-HIGH", 4320, 5050),
+        ("LOW", 6490, 6870),
+     ],
 }
 
 CORNER_LABELS['2023 Season Round 22: Abu Dhabi Grand Prix - Qualifying'] = CORNER_LABELS['2022 Season Round 22: Abu Dhabi Grand Prix - Qualifying']
