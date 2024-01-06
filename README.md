@@ -29,6 +29,14 @@ Usage:
   trackviz.py year round_number (specific quali session)
 ```
 
+The script `track_clustering.py` can be used to perform K-means clustering analysis on the racetracks of the 2024 Formula 1 season.
+
+```txt
+Usage:
+  track_clustering.py gen | generate 'track_corners_db.json'
+  track_clustering.py run | runs the K-means clustering method on the 'track_corners_db.json' data
+```
+
 ## Run these commands to set up your environment
 
 ```bash
